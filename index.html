@@ -333,12 +333,9 @@ footer{background:#0D1B3E;padding:64px 0 0}
 <!-- HERO -->
 <section class="hero" id="home">
   <div class="hs">
-    <div class="hs-slide  active" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_3.jpg')"></div>
-<div class="hs-slide" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_main.jpg')"></div>
-<div class="hs-slide" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_1.jpg')"></div>
-<div class="hs-slide" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_2.jpg')"></div>
-<div class="hs-slide" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_4.jpg')"></div>
-<div class="hs-slide" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_5.jpg')"></div>
+    <div class="hs-slide  active" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_main.jpg')"></div>
+    <div class="hs-slide" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_1.jpg')"></div>
+    <div class="hs-slide" style="background-image:url('https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/team/team_5.jpg')"></div>
     <div class="hs-ov"></div>
     <div class="hs-body">
       <div class="hs-tag"><div class="hs-tag-dot"></div><span>柬埔寨 · 金边旗舰诊所 · Phnom Penh, Cambodia</span></div>
@@ -356,7 +353,7 @@ footer{background:#0D1B3E;padding:64px 0 0}
       <div class="hs-stat"><span class="hs-sn">5,000+</span><span class="hs-sl">成功案例</span><span class="hs-se">Success Cases</span></div>
       <div class="hs-stat"><span class="hs-sn">98%</span><span class="hs-sl">客户满意度</span><span class="hs-se">Satisfaction Rate</span></div>
     </div>
-    <div class="hs-dots"><button class="hs-dot  hs-dot-on" onclick="hsGo(0)"></button><button class="hs-dot" onclick="hsGo(1)"></button><button class="hs-dot" onclick="hsGo(2)"></button><button class="hs-dot" onclick="hsGo(3)"></button><button class="hs-dot" onclick="hsGo(4)"></button><button class="hs-dot" onclick="hsGo(5)"></button></div>
+    <div class="hs-dots"><button class="hs-dot  hs-dot-on" onclick="hsGo(0)"></button><button class="hs-dot" onclick="hsGo(1)"></button><button class="hs-dot" onclick="hsGo(2)"></button></div>
     <button class="hs-arr hs-arr-l" onclick="hsPrev()">&#8592;</button>
     <button class="hs-arr hs-arr-r" onclick="hsNext()">&#8594;</button>
   </div>
@@ -647,7 +644,7 @@ function nextSlide(){goSlide((cur+1)%total);}
 function prevSlide(){goSlide((cur-1+total)%total);}
 function resetAuto(){clearInterval(auto);auto=setInterval(nextSlide,5000);}
 auto=setInterval(nextSlide,5000);
-var hsCur=0,hsTotal=6,hsAutoT;
+var hsCur=0,hsTotal=3,hsAutoT;
 function hsGo(n){var s=document.querySelectorAll('.hs-slide');var d=document.querySelectorAll('.hs-dot');s[hsCur].classList.remove('active');d[hsCur].classList.remove('hs-dot-on');hsCur=n;s[hsCur].classList.add('active');d[hsCur].classList.add('hs-dot-on');clearInterval(hsAutoT);hsAutoT=setInterval(hsNext,4500);}
 function hsNext(){hsGo((hsCur+1)%hsTotal);}
 function hsPrev(){hsGo((hsCur-1+hsTotal)%hsTotal);}
