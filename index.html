@@ -298,6 +298,51 @@ footer{background:#0D1B3E;padding:64px 0 0}
   .hs-btn1,.hs-btn2{width:220px;text-align:center}
   .about-img{height:320px}
 }
+
+/* ══ DOCTOR MODAL ══ */
+.doc-modal{display:none;position:fixed;inset:0;z-index:1000}
+.doc-modal.open{display:block}
+.doc-modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px)}
+.doc-modal-box{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;width:90%;max-width:1000px;max-height:90vh;overflow-y:auto;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.doc-modal-close{position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.1);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;color:var(--text);z-index:10;transition:background .2s}
+.doc-modal-close:hover{background:rgba(0,0,0,0.2)}
+.doc-modal-inner{display:grid;grid-template-columns:280px 1fr}
+.dp-left{background:linear-gradient(160deg,var(--navy-dk),var(--navy));padding:32px 24px;display:flex;flex-direction:column;gap:20px;align-items:center}
+.dp-photo{width:100%;border-radius:2px;object-fit:cover;object-position:top;max-height:320px}
+.dp-quick-info{width:100%;display:flex;flex-direction:column;gap:10px}
+.dp-qi-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1)}
+.dp-qi-label{font-size:12px;color:rgba(255,255,255,0.5)}
+.dp-qi-val{font-size:13px;font-weight:600;color:#fff}
+.dp-consult-btn{display:block;width:100%;text-align:center;background:linear-gradient(135deg,var(--rose-dk),var(--rose));color:#fff;padding:13px;font-family:"Noto Sans SC",sans-serif;font-size:13px;font-weight:500;text-decoration:none;letter-spacing:1px;transition:all .2s;box-shadow:0 4px 16px rgba(181,66,74,.3)}
+.dp-consult-btn:hover{box-shadow:0 6px 24px rgba(181,66,74,.5);transform:translateY(-1px)}
+.dp-right{padding:36px 32px;overflow-y:auto}
+.dp-spec-badge{display:inline-block;background:var(--navy-lt);color:var(--navy);font-size:11px;font-weight:500;letter-spacing:1.5px;padding:5px 12px;text-transform:uppercase;margin-bottom:12px}
+.dp-name{font-family:"Playfair Display",serif;font-size:32px;font-weight:700;color:var(--text);margin-bottom:4px}
+.dp-title{font-size:14px;font-weight:300;color:var(--gray);font-family:"Noto Sans SC",sans-serif}
+.dp-en{font-size:12px;color:var(--gray);letter-spacing:0.5px;margin-bottom:0}
+.dp-divider{width:40px;height:2px;background:var(--rose);margin:16px 0}
+.dp-desc{font-size:13.5px;font-weight:300;line-height:1.9;color:var(--text2)}
+.dp-section{margin-top:24px}
+.dp-section-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,0.06)}
+.dp-tags{display:flex;flex-wrap:wrap;gap:8px}
+.dp-tag{font-size:12px;color:var(--navy);background:var(--navy-lt);padding:5px 14px;border-radius:2px}
+.dp-certs{list-style:none;display:flex;flex-direction:column;gap:6px}
+.dp-certs li{font-size:12.5px;font-weight:300;color:var(--text2);line-height:1.5}
+.dp-cases-placeholder{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.dp-case-empty{background:var(--cream);height:100px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--gray);border:1px dashed rgba(0,0,0,0.1)}
+.dp-review-placeholder{background:var(--cream);padding:20px;text-align:center;font-size:13px;color:var(--gray);border:1px dashed rgba(0,0,0,0.1)}
+/* 医生卡片点击 */
+.slide{cursor:pointer;transition:opacity .2s}
+.slide:hover .sl-info{background:linear-gradient(160deg,#040f2e,var(--navy-dk))}
+.thumb{cursor:pointer}
+@media(max-width:768px){
+  .doc-modal-box{width:95%;max-height:95vh}
+  .doc-modal-inner{grid-template-columns:1fr}
+  .dp-left{padding:24px 20px}
+  .dp-right{padding:24px 20px}
+  .dp-cases-placeholder{grid-template-columns:1fr 1fr}
+}
+
 </style>
 </head>
 <body>
@@ -653,6 +698,274 @@ function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
 function closeMenu(){document.getElementById('mob').classList.remove('open');}
 window.addEventListener('scroll',function(){var n=document.getElementById('nav');n.style.boxShadow=window.scrollY>20?'0 2px 24px rgba(13,43,107,.1)':'0 1px 20px rgba(13,43,107,.06)';if(window.scrollY>window.innerHeight){n.style.background='rgba(250,249,248,0.98)';}else{n.style.background='rgba(250,249,248,0.96)';}  });
 document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}});});
+
+function openModal(id) {
+  document.getElementById('modal-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+// 点击医生卡片打开对应弹窗
+document.querySelectorAll('.slide').forEach(function(slide) {
+  slide.addEventListener('click', function() {
+    var id = this.id.replace('slide', '');
+    var docIds = ['zhang_qingyong','chen_genfeng','zhang_yongshuai','li_xijian','zhao_yong'];
+    if(docIds[parseInt(id)]) openModal(docIds[parseInt(id)]);
+  });
+});
+// ESC关闭
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'Escape') {
+    document.querySelectorAll('.doc-modal.open').forEach(function(m) {
+      m.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+});
+
 </script>
+
+<div class="doc-modal" id="modal-zhang_qingyong">
+  <div class="doc-modal-overlay" onclick="closeModal('zhang_qingyong')"></div>
+  <div class="doc-modal-box">
+    <button class="doc-modal-close" onclick="closeModal('zhang_qingyong')">✕</button>
+    <div class="doc-modal-inner">
+      <!-- 左：照片 -->
+      <div class="dp-left">
+        <img src="https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/doctors/zhang_qingyong.jpg" alt="张庆永" class="dp-photo">
+        <div class="dp-quick-info">
+          <div class="dp-qi-item"><span class="dp-qi-label">从业年限</span><span class="dp-qi-val">15+年</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">出诊时间</span><span class="dp-qi-val">周一 / 周三 / 周五</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">咨询费用</span><span class="dp-qi-val" style="color:var(--rose)">免费</span></div>
+        </div>
+        <a href="https://t.me/a661313" target="_blank" class="dp-consult-btn">立即预约咨询 →</a>
+      </div>
+      <!-- 右：详情 -->
+      <div class="dp-right">
+        <div class="dp-header">
+          <div class="dp-spec-badge">整形外科</div>
+          <h2 class="dp-name">张庆永 <span class="dp-title">/ 明星院长</span></h2>
+          <p class="dp-en">Dr. Zhang Qingyong · Plastic Surgery & Body Sculpting</p>
+        </div>
+        <div class="dp-divider"></div>
+        <p class="dp-desc">张庆永院长拥有超过15年整形外科临床经验，专注于形体塑造领域，以精湛的技术和艺术审美为每位患者定制专属方案，追求"匠心技术，精益求精，让美更自然"的理念。</p>
+        <div class="dp-section">
+          <h4 class="dp-section-title">擅长项目</h4>
+          <div class="dp-tags"><span class="dp-tag">胸部整形</span><span class="dp-tag">私密美化</span><span class="dp-tag">腹壁成型</span><span class="dp-tag">吸脂体雕</span><span class="dp-tag">脂肪移植</span></div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">资质认证</h4>
+          <ul class="dp-certs"><li>· 中国整形美容协会脂肪分会委员</li><li>· 中国整形美容协会乳房整形分会委员</li><li>· 中国医师协会美容与整形分会委员</li><li>· 强生（美国）乳房整形精英术者</li><li>· MEDPOR（美国）整形研究院高级特聘专家</li></ul>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">典型案例 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-cases-placeholder">
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+          </div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">患者评价 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-review-placeholder">患者评价功能即将开放，敬请期待</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="doc-modal" id="modal-chen_genfeng">
+  <div class="doc-modal-overlay" onclick="closeModal('chen_genfeng')"></div>
+  <div class="doc-modal-box">
+    <button class="doc-modal-close" onclick="closeModal('chen_genfeng')">✕</button>
+    <div class="doc-modal-inner">
+      <!-- 左：照片 -->
+      <div class="dp-left">
+        <img src="https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/doctors/chen_genfeng.jpg" alt="陈根逢" class="dp-photo">
+        <div class="dp-quick-info">
+          <div class="dp-qi-item"><span class="dp-qi-label">从业年限</span><span class="dp-qi-val">10+年</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">出诊时间</span><span class="dp-qi-val">周二 / 周四 / 周六</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">咨询费用</span><span class="dp-qi-val" style="color:var(--rose)">免费</span></div>
+        </div>
+        <a href="https://t.me/a661313" target="_blank" class="dp-consult-btn">立即预约咨询 →</a>
+      </div>
+      <!-- 右：详情 -->
+      <div class="dp-right">
+        <div class="dp-header">
+          <div class="dp-spec-badge">整形外科</div>
+          <h2 class="dp-name">陈根逢 <span class="dp-title">/ 明星院长</span></h2>
+          <p class="dp-en">Dr. Chen Genfeng · Breast Surgery Specialist</p>
+        </div>
+        <div class="dp-divider"></div>
+        <p class="dp-desc">陈根逢院长拥有近十年成熟的美学技术经验，专注胸部整形领域，以自然美学为核心，为每位爱美者打造最适合自己的胸部形态。</p>
+        <div class="dp-section">
+          <h4 class="dp-section-title">擅长项目</h4>
+          <div class="dp-tags"><span class="dp-tag">假体胸</span><span class="dp-tag">脂肪胸</span><span class="dp-tag">抽脂塑形</span></div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">资质认证</h4>
+          <ul class="dp-certs"><li>· 人体脂肪医学研究成员</li><li>· 上海市医师协会会员</li><li>· 中国整形美容协会委员</li><li>· 中国整形美容协会医美与艺术分会会员</li></ul>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">典型案例 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-cases-placeholder">
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+          </div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">患者评价 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-review-placeholder">患者评价功能即将开放，敬请期待</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="doc-modal" id="modal-zhang_yongshuai">
+  <div class="doc-modal-overlay" onclick="closeModal('zhang_yongshuai')"></div>
+  <div class="doc-modal-box">
+    <button class="doc-modal-close" onclick="closeModal('zhang_yongshuai')">✕</button>
+    <div class="doc-modal-inner">
+      <!-- 左：照片 -->
+      <div class="dp-left">
+        <img src="https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/doctors/zhang_yongshuai.jpg" alt="张永帅" class="dp-photo">
+        <div class="dp-quick-info">
+          <div class="dp-qi-item"><span class="dp-qi-label">从业年限</span><span class="dp-qi-val">12+年</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">出诊时间</span><span class="dp-qi-val">周一 / 周二 / 周四</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">咨询费用</span><span class="dp-qi-val" style="color:var(--rose)">免费</span></div>
+        </div>
+        <a href="https://t.me/a661313" target="_blank" class="dp-consult-btn">立即预约咨询 →</a>
+      </div>
+      <!-- 右：详情 -->
+      <div class="dp-right">
+        <div class="dp-header">
+          <div class="dp-spec-badge">眼部整形</div>
+          <h2 class="dp-name">张永帅 <span class="dp-title">/ 明星院长</span></h2>
+          <p class="dp-en">Dr. Zhang Yongshuai · Eye Surgery & Facial Rejuvenation</p>
+        </div>
+        <div class="dp-divider"></div>
+        <p class="dp-desc">张永帅院长在眼部整形及面部年轻化领域拥有丰富经验，以精细化操作著称，擅长还原每个人最自然的美态，深受患者信赖。</p>
+        <div class="dp-section">
+          <h4 class="dp-section-title">擅长项目</h4>
+          <div class="dp-tags"><span class="dp-tag">眼全项</span><span class="dp-tag">面部针剂</span><span class="dp-tag">M唇</span><span class="dp-tag">精灵耳</span><span class="dp-tag">面部提升</span></div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">资质认证</h4>
+          <ul class="dp-certs"><li>· 中华医学会医学美容协会理事</li><li>· 中国整形美容协会医师</li><li>· 眼部整形领域杰出医师</li><li>· 上海外科领域权威专家</li><li>· 乔雅登认证医师</li><li>· 整外+皮肤双执业医师</li></ul>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">典型案例 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-cases-placeholder">
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+          </div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">患者评价 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-review-placeholder">患者评价功能即将开放，敬请期待</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="doc-modal" id="modal-li_xijian">
+  <div class="doc-modal-overlay" onclick="closeModal('li_xijian')"></div>
+  <div class="doc-modal-box">
+    <button class="doc-modal-close" onclick="closeModal('li_xijian')">✕</button>
+    <div class="doc-modal-inner">
+      <!-- 左：照片 -->
+      <div class="dp-left">
+        <img src="https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/doctors/li_xijian.jpg" alt="李西建" class="dp-photo">
+        <div class="dp-quick-info">
+          <div class="dp-qi-item"><span class="dp-qi-label">从业年限</span><span class="dp-qi-val">10+年</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">出诊时间</span><span class="dp-qi-val">周三 / 周五 / 周六</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">咨询费用</span><span class="dp-qi-val" style="color:var(--rose)">免费</span></div>
+        </div>
+        <a href="https://t.me/a661313" target="_blank" class="dp-consult-btn">立即预约咨询 →</a>
+      </div>
+      <!-- 右：详情 -->
+      <div class="dp-right">
+        <div class="dp-header">
+          <div class="dp-spec-badge">鼻整形专科</div>
+          <h2 class="dp-name">李西建 <span class="dp-title">/ 明星院长</span></h2>
+          <p class="dp-en">Dr. Li Xijian · Rhinoplasty & Revision Specialist</p>
+        </div>
+        <div class="dp-divider"></div>
+        <p class="dp-desc">李西建院长是国内鼻整形修复领域权威专家，拥有美国Surgiform认证，专注各类复杂鼻整形及修复手术，以精准的手术设计著称。</p>
+        <div class="dp-section">
+          <h4 class="dp-section-title">擅长项目</h4>
+          <div class="dp-tags"><span class="dp-tag">肋骨鼻综合</span><span class="dp-tag">复杂鼻修复</span><span class="dp-tag">微起伏鼻</span><span class="dp-tag">明星网红鼻定制</span></div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">资质认证</h4>
+          <ul class="dp-certs"><li>· 美国Surgiform认证医师</li><li>· 中华医学会整形修复协会委员</li><li>· 中华医学会整形外科青年学会委员</li><li>· 中国鼻整形修复医师联盟专家委员</li></ul>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">典型案例 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-cases-placeholder">
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+          </div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">患者评价 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-review-placeholder">患者评价功能即将开放，敬请期待</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="doc-modal" id="modal-zhao_yong">
+  <div class="doc-modal-overlay" onclick="closeModal('zhao_yong')"></div>
+  <div class="doc-modal-box">
+    <button class="doc-modal-close" onclick="closeModal('zhao_yong')">✕</button>
+    <div class="doc-modal-inner">
+      <!-- 左：照片 -->
+      <div class="dp-left">
+        <img src="https://mkjvfjocmatgfhwxgamj.supabase.co/storage/v1/object/public/FXGJ/doctors/zhao_yong.jpg" alt="赵勇" class="dp-photo">
+        <div class="dp-quick-info">
+          <div class="dp-qi-item"><span class="dp-qi-label">从业年限</span><span class="dp-qi-val">12+年</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">出诊时间</span><span class="dp-qi-val">周一 / 周三 / 周六</span></div>
+          <div class="dp-qi-item"><span class="dp-qi-label">咨询费用</span><span class="dp-qi-val" style="color:var(--rose)">免费</span></div>
+        </div>
+        <a href="https://t.me/a661313" target="_blank" class="dp-consult-btn">立即预约咨询 →</a>
+      </div>
+      <!-- 右：详情 -->
+      <div class="dp-right">
+        <div class="dp-header">
+          <div class="dp-spec-badge">形体雕塑</div>
+          <h2 class="dp-name">赵勇 <span class="dp-title">/ 明星院长</span></h2>
+          <p class="dp-en">Dr. Zhao Yong · Body Sculpting & Facial Contouring</p>
+        </div>
+        <div class="dp-divider"></div>
+        <p class="dp-desc">赵勇院长是形体雕塑及面部综合整形领域首席专家，师从多名国内外顶尖专家，以精细化手术设计和自然美学理念，为患者打造理想体态。</p>
+        <div class="dp-section">
+          <h4 class="dp-section-title">擅长项目</h4>
+          <div class="dp-tags"><span class="dp-tag">马甲线精雕</span><span class="dp-tag">形体雕塑</span><span class="dp-tag">脂肪塑形</span><span class="dp-tag">五官丰盈填充</span><span class="dp-tag">皮骨贴合术</span></div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">资质认证</h4>
+          <ul class="dp-certs"><li>· 上海三甲医院整形外科骨干</li><li>· 师从多名国内外顶尖专家</li><li>· 中国医师协会美容整形医师分会会员</li><li>· 面部精细化综合整形首席专家</li></ul>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">典型案例 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-cases-placeholder">
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+            <div class="dp-case-empty">📷 案例照片即将上传</div>
+          </div>
+        </div>
+        <div class="dp-section">
+          <h4 class="dp-section-title">患者评价 <span style="font-size:11px;font-weight:300;color:var(--gray)">（即将上线）</span></h4>
+          <div class="dp-review-placeholder">患者评价功能即将开放，敬请期待</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
