@@ -1,0 +1,44 @@
+from supabase import create_client
+import os, json
+
+SUPABASE_URL = "https://mkjvfjocmatgfhwxgamj.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ranZmam9jbWF0Z2Zod3hnYW1qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MzIxNDQsImV4cCI6MjA5NTAwODE0NH0.YDeuCQkt50wK9oHeLWlF_b6IYXeiDtplOWUa1-A4X30"
+BUCKET = "FXGJ"
+
+FILES = {
+    "a47cea05384b3701482c7953ed326ecd.jpg": "team/team_main.jpg",
+    "lQDPItYFmcGaYAPNAtDNBQCwMz9AkVsF1fAKBVmq8KQVAA_1280_720.jpg": "team/team_1.jpg",
+    "lQDPItYFmeq68IPNBQDNAtCw-DwbLrDy2BoKBVmoNmHxAA_720_1280.jpg": "team/team_2.jpg",
+    "lQDPIufJExavroPNBQDNAtCwR7vZhbxK_10KBVml8x8BAA_720_1280.jpg": "team/team_3.jpg",
+    "lQDPIutWkZhLfwPNBQDNAtCwLffRwi1XUwEKBVmqD5XxAA_720_1280.jpg": "team/team_4.jpg",
+    "lQDPIvX_DYCpHgPNAtDNBQCw8IaR3GVsOq0KBVmpP8SgAA_1280_720.jpg": "team/team_5.jpg",
+    "医生1.JPG": "doctors/zhang_qingyong.jpg",
+    "医生11.JPG": "doctors/chen_genfeng.jpg",
+    "医生12.JPG": "doctors/zhang_yongshuai.jpg",
+    "医生1111.JPG": "doctors/li_xijian.jpg",
+    "医生1123.JPG": "doctors/zhao_yong.jpg",
+    "宣传片.mp4": "video/promo.mp4",
+}
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+urls = {}
+
+for local_name, storage_path in FILES.items():
+    if not os.path.exists(local_name):
+        print(f"跳过(不存在): {local_name}")
+        continue
+    try:
+        print(f"上传: {local_name}...", end=" ")
+        with open(local_name, 'rb') as f:
+            data = f.read()
+        mime = 'video/mp4' if local_name.endswith('.mp4') else 'image/jpeg'
+        supabase.storage.from_(BUCKET).upload(storage_path, data, file_options={"content-type": mime, "upsert": "true"})
+        url = supabase.storage.from_(BUCKET).get_public_url(storage_path)
+        urls[storage_path] = url
+        print(f"✓ {len(data)//1024}KB")
+    except Exception as e:
+        print(f"✗ {e}")
+
+with open("urls.json", "w") as f:
+    json.dump(urls, f, indent=2)
+print(f"\n完成! {len(urls)}个文件已上传，链接保存在 urls.json")
